@@ -92,6 +92,21 @@ export default function CheckoutPage() {
     }
   };
 
+  const handleGrantFreeAccess = async () => {
+    if (!user) return;
+    setLoading(true);
+    setStatus(null);
+    try {
+      await setDoc(doc(db, "users", user.uid), { freeAccess: true }, { merge: true });
+      setStatus({ type: "success", message: "Free access granted. Redirecting..." });
+      setTimeout(() => router.replace("/courses"), 600);
+    } catch (e) {
+      setStatus({ type: "error", message: e?.message || "Failed to grant free access." });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (!authChecked) {
     return (
       <div className="min-h-screen bg-white text-neutral-900 flex items-center justify-center">
@@ -149,26 +164,18 @@ export default function CheckoutPage() {
               className="inline-flex items-center rounded-full bg-[var(--brand-primary)] text-white px-5 py-2 text-sm font-semibold hover:bg-[var(--brand-primary-dark)] disabled:opacity-60"
             >{loading ? "Starting checkout..." : "Pay $200"}</button>
             {isOwner && (
-              <button
-                onClick={handleDevMarkPaid}
-                disabled={loading}
-                className="inline-flex items-center rounded-full border border-neutral-300 bg-white text-neutral-900 px-5 py-2 text-sm font-semibold hover:bg-neutral-50"
-              >Dev: Mark Paid</button>
-            )}
-            {user && ((user.email?.toLowerCase() === process.env.NEXT_PUBLIC_OWNER_EMAIL?.toLowerCase()) || (user.uid === process.env.NEXT_PUBLIC_OWNER_UID)) && (
-              <button
-                onClick={async () => {
-                  try {
-                    await setDoc(doc(db, "users", user.uid), { freeAccess: true }, { merge: true });
-                    setStatus({ type: "success", message: "Free access granted. Redirecting..." });
-                    setTimeout(() => router.replace("/courses"), 600);
-                  } catch (e) {
-                    setStatus({ type: "error", message: e?.message || "Failed to grant free access." });
-                  }
-                }}
-                disabled={loading}
-                className="inline-flex items-center rounded-full border border-neutral-300 bg-white text-neutral-900 px-5 py-2 text-sm font-semibold hover:bg-neutral-50"
-              >Grant Free Access</button>
+              <>
+                <button
+                  onClick={handleDevMarkPaid}
+                  disabled={loading}
+                  className="inline-flex items-center rounded-full border border-neutral-300 bg-white text-neutral-900 px-5 py-2 text-sm font-semibold hover:bg-neutral-50"
+                >Dev: Mark Paid</button>
+                <button
+                  onClick={handleGrantFreeAccess}
+                  disabled={loading}
+                  className="inline-flex items-center rounded-full border border-neutral-300 bg-white text-neutral-900 px-5 py-2 text-sm font-semibold hover:bg-neutral-50"
+                >Grant Free Access</button>
+              </>
             )}
           </div>
 

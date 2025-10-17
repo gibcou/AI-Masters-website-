@@ -26,6 +26,7 @@ export default function CoursePlayer() {
   const [testAnswers, setTestAnswers] = useState({ midterm: {}, final: {} });
   const [testSubmitted, setTestSubmitted] = useState({ midterm: false, final: false });
   const [testScores, setTestScores] = useState({ midterm: null, final: null });
+  const [midtermIndex, setMidtermIndex] = useState(0);
 
   const [labStatus, setLabStatus] = useState({}); // lab completion per lab.id
   const [labWorkspace, setLabWorkspace] = useState({}); // per-lab input, feedback, analysis
@@ -429,42 +430,104 @@ const [profileName, setProfileName] = useState("");
                 <div className="font-semibold">{isMidterm ? "Midterm Test" : "Final Test"}</div>
                 <p className="text-sm text-neutral-700 mt-1">Answer all questions to continue. Your score will be saved.</p>
                 <div className="mt-3 space-y-3">
-                  {(isMidterm ? midtermQuestions : finalQuestions).map((q, idx) => {
-                    const type = isMidterm ? "midterm" : "final";
-                    const selected = testAnswers[type][idx];
-                    const submitted = testSubmitted[type];
-                    const isCorrect = submitted && selected !== undefined && selected === q.answerIndex;
-                    return (
-                      <div key={idx} className="rounded-lg border border-neutral-200 p-3">
-                        <div className="text-sm font-medium">{idx + 1}. {q.question}</div>
-                        <div className="mt-2 grid gap-2">
-                          {q.options.map((opt, i) => (
+                  {isMidterm ? (
+                    (() => {
+                      const q = midtermQuestions[midtermIndex];
+                      if (!q) return null;
+                      const type = "midterm";
+                      const selected = testAnswers[type][midtermIndex];
+                      const submitted = testSubmitted[type];
+                      const isCorrect = submitted && selected !== undefined && selected === q.answerIndex;
+                      return (
+                        <div className="rounded-lg border border-neutral-200 p-3">
+                          <div className="text-sm font-medium">{midtermIndex + 1}. {q.question}</div>
+                          <div className="mt-2 grid gap-2">
+                            {q.options.map((opt, i) => (
+                              <button
+                                key={i}
+                                onClick={() => {
+                                  const t = type;
+                                  setTestAnswers((prev) => ({ ...prev, [t]: { ...prev[t], [midtermIndex]: i } }));
+                                }}
+                                className={`text-left rounded-md border px-3 py-2 text-sm transition ${
+                                  selected === i
+                                    ? submitted
+                                      ? isCorrect
+                                        ? "border-green-400 bg-green-50"
+                                        : "border-red-400 bg-red-50"
+                                      : "border-indigo-400 bg-indigo-50"
+                                    : "border-neutral-200 hover:bg-neutral-50"
+                                }`}
+                              >
+                                {opt}
+                              </button>
+                            ))}
+                          </div>
+                          {submitted && (
+                            <div className={`mt-2 text-xs ${isCorrect ? "text-green-700" : "text-red-700"}`}>{isCorrect ? "Correct" : "Incorrect"}</div>
+                          )}
+                          <div className="mt-3 flex items-center gap-3">
                             <button
-                              key={i}
+                              className="inline-flex items-center rounded-full border border-neutral-300 bg-white px-3 py-1 text-xs hover:bg-neutral-50"
+                              onClick={() => setMidtermIndex((i) => Math.max(0, i - 1))}
+                              disabled={midtermIndex === 0}
+                            >
+                              Previous Question
+                            </button>
+                            <button
+                              className="inline-flex items-center rounded-full bg-[var(--brand-primary)] text-white px-3 py-1 text-xs hover:bg-[var(--brand-primary-dark)] disabled:opacity-60"
                               onClick={() => {
                                 const t = type;
-                                setTestAnswers((prev) => ({ ...prev, [t]: { ...prev[t], [idx]: i } }));
+                                if (testAnswers[t][midtermIndex] === undefined) return;
+                                setMidtermIndex((i) => Math.min(midtermQuestions.length - 1, i + 1));
                               }}
-                              className={`text-left rounded-md border px-3 py-2 text-sm transition ${
-                                selected === i
-                                  ? submitted
-                                    ? isCorrect
-                                      ? "border-green-400 bg-green-50"
-                                      : "border-red-400 bg-red-50"
-                                    : "border-indigo-400 bg-indigo-50"
-                                  : "border-neutral-200 hover:bg-neutral-50"
-                              }`}
+                              disabled={midtermIndex === midtermQuestions.length - 1 || testAnswers.midterm[midtermIndex] === undefined}
                             >
-                              {opt}
+                              Next Question
                             </button>
-                          ))}
+                            <span className="text-xs text-neutral-600">Question {midtermIndex + 1} of {midtermQuestions.length}</span>
+                          </div>
                         </div>
-                        {submitted && (
-                          <div className={`mt-2 text-xs ${isCorrect ? "text-green-700" : "text-red-700"}`}>{isCorrect ? "Correct" : "Incorrect"}</div>
-                        )}
-                      </div>
-                    );
-                  })}
+                      );
+                    })()
+                  ) : (
+                    (finalQuestions).map((q, idx) => {
+                      const type = "final";
+                      const selected = testAnswers[type][idx];
+                      const submitted = testSubmitted[type];
+                      const isCorrect = submitted && selected !== undefined && selected === q.answerIndex;
+                      return (
+                        <div key={idx} className="rounded-lg border border-neutral-200 p-3">
+                          <div className="text-sm font-medium">{idx + 1}. {q.question}</div>
+                          <div className="mt-2 grid gap-2">
+                            {q.options.map((opt, i) => (
+                              <button
+                                key={i}
+                                onClick={() => {
+                                  const t = type;
+                                  setTestAnswers((prev) => ({ ...prev, [t]: { ...prev[t], [idx]: i } }));
+                                }}
+                                className={`text-left rounded-md border px-3 py-2 text-sm transition ${
+                                  selected === i
+                                    ? submitted
+                                      ? isCorrect
+                                        ? "border-green-400 bg-green-50"
+                                        : "border-red-400 bg-red-50"
+                                      : "border-indigo-400 bg-indigo-50"
+                                    : "border-neutral-200 hover:bg-neutral-50"
+                                }`}
+                              >
+                                {opt}
+                              </button>
+                            ))}
+                          </div>
+                          {submitted && (
+                            <div className={`mt-2 text-xs ${isCorrect ? "text-green-700" : "text-red-700"}`}>{isCorrect ? "Correct" : "Incorrect"}</div>
+                          )}
+                        </div>
+                      );
+                    })
+                  )}
                 </div>
                 <div className="mt-4 flex items-center gap-3">
                   <button
