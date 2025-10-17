@@ -1,9 +1,11 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
-import { app, analytics, auth } from "@/lib/firebase";
+import { app, analytics, auth, db } from "@/lib/firebase";
 import Link from "next/link";
 import { getAllCourses } from "@/lib/courses";
 import { onAuthStateChanged, signOut } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { useRouter } from "next/navigation";
 
 // AI Learning Assessment: 20 questions across categories
 const QUESTIONS = [
@@ -38,6 +40,7 @@ export default function QuizPage() {
   const questions = useMemo(buildQuestions, []);
   const total = questions.length;
 
+  const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState(Array(total).fill(null));
   const [submitted, setSubmitted] = useState(false);
@@ -122,6 +125,25 @@ const firstCourseSlug = allCourses[0]?.slug;
     }
   };
 
+  const handleSelect = (idx) => {
+    setAnswers((prev) => {
+      const next = [...prev];
+      next[currentIndex] = idx;
+      try {
+        localStorage.setItem("coursiv_quiz_answers", JSON.stringify(next));
+      } catch {}
+      return next;
+    });
+  };
+
+  const prevQuestion = () => {
+    setCurrentIndex((i) => Math.max(0, i - 1));
+  };
+
+  const nextQuestion = () => {
+    setCurrentIndex((i) => Math.min(total - 1, i + 1));
+  };
+
   const score = useMemo(() => {
     if (!submitted) return null;
     let correct = 0;
@@ -197,6 +219,8 @@ const firstCourseSlug = allCourses[0]?.slug;
 
     return { correct, total, percent, perCategory: withPct.map(({ category, correct, total, pct }) => ({ category, correct, total, pct })), level, recommendation, courses };
   }, [submitted, answers, questions, total]);
+
+  const progressPercent = Math.round(((currentIndex + 1) / total) * 100);
 
   // Utility: validate email format
   const isValidEmail = (email) => /.+@.+\..+/.test(email);

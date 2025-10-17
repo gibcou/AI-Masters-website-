@@ -1,12 +1,12 @@
 "use client";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { auth, db } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { doc, setDoc, getDoc, addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { doc, setDoc, addDoc, collection, serverTimestamp } from "firebase/firestore";
 
-export default function CheckoutSuccessPage() {
+function SuccessContent() {
   const router = useRouter();
   const params = useSearchParams();
   const [user, setUser] = useState(null);
@@ -18,7 +18,6 @@ export default function CheckoutSuccessPage() {
         router.replace("/login");
       } else {
         setUser(fbUser);
-        // Verify Stripe session server-side then mark hasPaid
         try {
           const sessionId = params.get("session_id");
           let paid = false;
@@ -29,7 +28,6 @@ export default function CheckoutSuccessPage() {
           }
           if (paid) {
             await setDoc(doc(db, "users", fbUser.uid), { hasPaid: true }, { merge: true });
-            // NEW: Create a receipt entry under the user's portfolio
             try {
               await addDoc(collection(db, "users", fbUser.uid, "receipts"), {
                 sessionId: sessionId || "unknown",
@@ -41,7 +39,6 @@ export default function CheckoutSuccessPage() {
                 createdAt: serverTimestamp(),
               });
             } catch (e) {
-              // non-blocking: receipt creation failure shouldn't stop access
               console.error("Failed to create receipt:", e);
             }
             setStatus({ type: "success", message: "Payment confirmed. Access granted!" });
@@ -76,5 +73,19 @@ export default function CheckoutSuccessPage() {
         )}
       </main>
     </div>
+  );
+}
+
+export default function CheckoutSuccessPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-white text-neutral-900">
+        <main className="mx-auto max-w-2xl px-6 py-10">
+          <p className="text-neutral-700">Processing your payment...</p>
+        </main>
+      </div>
+    }>
+      <SuccessContent />
+    </Suspense>
   );
 }

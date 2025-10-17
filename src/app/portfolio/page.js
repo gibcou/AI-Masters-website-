@@ -162,14 +162,14 @@ export default function PortfolioPage() {
           <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
             <h2 className="text-xl font-semibold">Featured Projects</h2>
             <div className="mt-3 space-y-3">
-              <a href="/courses/ai-content-creation" className="block rounded-lg border border-neutral-200 p-4 hover:border-[var(--brand-primary)]">
+              <Link href="/courses/ai-content-creation" className="block rounded-lg border border-neutral-200 p-4 hover:border-[var(--brand-primary)]">
                 <div className="font-medium">AI Content Creation System</div>
                 <div className="text-sm text-neutral-600">Framework and tools for multi-format content repurposing.</div>
-              </a>
-              <a href="/quiz" className="block rounded-lg border border-neutral-200 p-4 hover:border-[var(--brand-primary)]">
+              </Link>
+              <Link href="/quiz" className="block rounded-lg border border-neutral-200 p-4 hover:border-[var(--brand-primary)]">
                 <div className="font-medium">AI Readiness Quiz</div>
                 <div className="text-sm text-neutral-600">Assess your AI adoption profile with instant feedback.</div>
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -265,8 +265,8 @@ export default function PortfolioPage() {
         <section className="mt-10 rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
           <h2 className="text-xl font-semibold">Links</h2>
           <div className="mt-3 flex flex-wrap gap-3">
-            <a href="/courses" className="inline-flex items-center justify-center rounded-full bg-[var(--brand-primary)] text-white px-5 py-3 text-sm font-semibold hover:bg-[var(--brand-primary-dark)]">Explore Courses</a>
-            <a href="/login" className="inline-flex items-center justify-center rounded-full border border-neutral-300 bg-white text-neutral-900 px-5 py-3 text-sm font-semibold hover:bg-neutral-50">Update Login</a>
+            <Link href="/courses" className="inline-flex items-center justify-center rounded-full bg-[var(--brand-primary)] text-white px-5 py-3 text-sm font-semibold hover:bg-[var(--brand-primary-dark)]">Explore Courses</Link>
+            <Link href="/login" className="inline-flex items-center justify-center rounded-full border border-neutral-300 bg-white text-neutral-900 px-5 py-3 text-sm font-semibold hover:bg-neutral-50">Update Login</Link>
           </div>
         </section>
       </main>
