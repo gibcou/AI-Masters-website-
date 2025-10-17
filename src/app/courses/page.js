@@ -14,6 +14,7 @@ export default function CoursesIndex() {
   const [unlockMap, setUnlockMap] = useState(null);
   const [authChecked, setAuthChecked] = useState(false);
   const [profileName, setProfileName] = useState("");
+  const [accessGranted, setAccessGranted] = useState(false);
 
   // Login-required guard via Firebase + payment gating
   useEffect(() => {
@@ -50,6 +51,7 @@ export default function CoursesIndex() {
             await setDoc(uref, { freeAccess: true }, { merge: true });
           }
           const accessGranted = hasPaid || freeAccess || isOwner;
+          setAccessGranted(accessGranted);
           if (!accessGranted) {
             router.replace("/checkout");
           }
@@ -70,6 +72,13 @@ export default function CoursesIndex() {
 
   useEffect(() => {
     try {
+      // If access is granted, unlock all courses globally
+      if (accessGranted) {
+        const mapAll = {};
+        courses.forEach((c) => { mapAll[c.slug] = true; });
+        setUnlockMap(mapAll);
+        return;
+      }
       const map = {};
       const quizCompleted = localStorage.getItem("aimasters_quiz_completed") === "true";
       if (courses.length > 0) {
@@ -84,7 +93,7 @@ export default function CoursesIndex() {
     } catch (e) {
       setUnlockMap({});
     }
-  }, [courses]);
+  }, [courses, accessGranted]);
 
   if (!authChecked || !user) {
     return null;

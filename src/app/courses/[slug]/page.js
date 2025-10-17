@@ -20,6 +20,7 @@ export default function CoursePlayer() {
   const [savedAt, setSavedAt] = useState(null);
   const [lockedCourse, setLockedCourse] = useState(false);
   const [courseCompleted, setCourseCompleted] = useState(false);
+  const [accessGranted, setAccessGranted] = useState(false);
 
   // NEW: test answers/submission state
   const [testAnswers, setTestAnswers] = useState({ midterm: {}, final: {} });
@@ -72,6 +73,7 @@ const [profileName, setProfileName] = useState("");
             await setDoc(uref, { freeAccess: true }, { merge: true });
           }
           const accessGranted = hasPaid || freeAccess || isOwner;
+          setAccessGranted(accessGranted);
           if (!accessGranted) {
             router.replace("/checkout");
           }
@@ -151,18 +153,22 @@ const [profileName, setProfileName] = useState("");
     if (!course) return;
     // compute locked and completion flags
     try {
-      let locked = false;
-      if (courseIndex === 0) {
-        locked = localStorage.getItem("aimasters_quiz_completed") !== "true";
+      if (accessGranted) {
+        setLockedCourse(false);
       } else {
-        const prevCompleted = localStorage.getItem(`aimasters_course_completed:${prevCourseSlug}`) === "true";
-        locked = !prevCompleted;
+        let locked = false;
+        if (courseIndex === 0) {
+          locked = localStorage.getItem("aimasters_quiz_completed") !== "true";
+        } else {
+          const prevCompleted = localStorage.getItem(`aimasters_course_completed:${prevCourseSlug}`) === "true";
+          locked = !prevCompleted;
+        }
+        setLockedCourse(locked);
       }
-      setLockedCourse(locked);
       const completed = localStorage.getItem(`aimasters_course_completed:${slug}`) === "true";
       setCourseCompleted(completed);
     } catch {}
-  }, [course, slug, courseIndex, prevCourseSlug]);
+  }, [course, slug, courseIndex, prevCourseSlug, accessGranted]);
 
   useEffect(() => {
     if (!course) return;
