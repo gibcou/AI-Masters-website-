@@ -164,7 +164,7 @@ export default function Home() {
       <header className="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-brand-border">
         <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="text-indigo-600 text-2xl font-semibold italic" style={{ fontFamily: '"Brush Script MT","Lucida Handwriting","Segoe Script","Pacifico",cursive' }}>AI Master</span>
+            <Link href="/" className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600 text-3xl md:text-4xl font-black italic tracking-tight drop-shadow-sm" style={{ fontFamily: '"Brush Script MT","Lucida Handwriting","Segoe Script","Pacifico",cursive' }}>AI Master</Link>
           </div>
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
             <a href="/" className="hover:text-[var(--brand-primary)]">Home</a>
@@ -369,12 +369,13 @@ export default function Home() {
                 <div className="pointer-events-none absolute bottom-8 right-8 text-right z-10">
                   <div className="rounded-md bg-white/90 backdrop-blur-md px-4 py-3 w-[240px] min-h-[64px] shadow-sm">
                     <div
-                      className="text-[24px] md:text-[28px] leading-none font-semibold text-[var(--brand-primary)] italic tracking-tight"
+                      className="relative text-[26px] md:text-[30px] leading-none font-semibold text-[var(--brand-primary)] italic tracking-tight"
                       style={{ fontFamily: '"Brush Script MT","Lucida Handwriting","Segoe Script","Pacifico",cursive' }}
                     >
                       Gibson Coutley
+                      <span className="absolute left-0 right-0 -bottom-1 h-[2px] bg-gradient-to-r from-transparent via-[var(--brand-primary)] to-transparent opacity-60" aria-hidden="true"></span>
                     </div>
-                    <div className="mt-1 text-[11px] md:text-xs text-neutral-600/95 italic">Founder, AI Master</div>
+                    <div className="mt-1 text-[11px] md:text-xs text-neutral-700 italic">Founder, AI Master</div>
                   </div>
                 </div>
               </div>
@@ -698,10 +699,10 @@ export default function Home() {
                 Complete your AI course and receive a certificate to highlight your expertise. It’s proof of the valuable skills you’ve gained to tackle challenges, achieve your goals, and move forward in your career or personal projects.
               </p>
               <div className="mt-6">
-                <a href="#start" className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--brand-primary)] text-white px-5 py-3 text-sm font-semibold hover:bg-[var(--brand-primary-dark)]">
+                <Link href="/quiz" className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--brand-primary)] text-white px-5 py-3 text-sm font-semibold shadow-sm hover:shadow-md hover:bg-[var(--brand-primary-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--brand-primary)] transition">
                   Get Certificate Today
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-                </a>
+                </Link>
               </div>
             </div>
             <div className="order-first md:order-last">
