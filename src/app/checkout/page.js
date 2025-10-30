@@ -15,18 +15,22 @@ export default function CheckoutPage() {
   const [isOwner, setIsOwner] = useState(false);
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, async (fbUser) => {
+    const unsub = onAuthStateChanged(auth, (fbUser) => {
       if (!fbUser) {
         setUser(null);
+        setAuthChecked(true); // render immediately without waiting for network
         router.replace("/login");
-      } else {
-        setUser(fbUser);
-        // compute owner early for UI
-        const OWNER_EMAIL = process.env.NEXT_PUBLIC_OWNER_EMAIL?.toLowerCase();
-        const OWNER_UID = process.env.NEXT_PUBLIC_OWNER_UID;
-        const ownerFlag = (fbUser.email?.toLowerCase() === OWNER_EMAIL) || (fbUser.uid === OWNER_UID);
-        setIsOwner(!!ownerFlag);
-        // If already paid or has freeAccess (or is owner), skip checkout
+        return;
+      }
+      setUser(fbUser);
+      setAuthChecked(true); // do not block initial render while we check gating
+      // compute owner early for UI
+      const OWNER_EMAIL = process.env.NEXT_PUBLIC_OWNER_EMAIL?.toLowerCase();
+      const OWNER_UID = process.env.NEXT_PUBLIC_OWNER_UID;
+      const ownerFlag = (fbUser.email?.toLowerCase() === OWNER_EMAIL) || (fbUser.uid === OWNER_UID);
+      setIsOwner(!!ownerFlag);
+      // If already paid or has freeAccess (or is owner), skip checkout
+      (async () => {
         try {
           const uref = doc(db, "users", fbUser.uid);
           const snap = await getDoc(uref);
@@ -42,8 +46,7 @@ export default function CheckoutPage() {
             return;
           }
         } catch {}
-      }
-      setAuthChecked(true);
+      })();
     });
     return () => unsub();
   }, [router]);

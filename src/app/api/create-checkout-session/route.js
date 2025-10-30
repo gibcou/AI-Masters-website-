@@ -14,9 +14,12 @@ export async function POST(req) {
     if (!secret) {
       return NextResponse.json({ message: "Stripe secret key not configured" }, { status: 500 });
     }
-    const stripe = new Stripe(secret);
+    // Explicit API version pin for stability
+    const stripe = new Stripe(secret, { apiVersion: "2024-09-30" });
 
-    const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const baseURL = process.env.NEXT_PUBLIC_BASE_URL || process.env.VERCEL_URL || "http://localhost:3000";
+    const rootURL = baseURL.startsWith("http") ? baseURL : `https://${baseURL}`;
+
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       payment_method_types: ["card"],
@@ -31,8 +34,8 @@ export async function POST(req) {
         },
       ],
       customer_email: email,
-      success_url: `${baseURL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${baseURL}/checkout`,
+      success_url: `${rootURL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${rootURL}/checkout`,
       metadata: { uid },
     });
 
