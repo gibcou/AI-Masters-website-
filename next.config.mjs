@@ -11,6 +11,8 @@ const nextConfig = {
     // Use unoptimized images to avoid Next.js Image Optimization reliance on external loaders.
     unoptimized: true,
   },
+  // Produce a static export suitable for GitHub Pages
+  output: 'export',
 };
 
 export default nextConfig;

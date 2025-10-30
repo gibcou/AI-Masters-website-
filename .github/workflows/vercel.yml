@@ -1,4 +1,4 @@
-name: Deploy to Vercel
+name: Deploy to Vercel (disabled)
 
 on:
   push:
@@ -7,31 +7,8 @@ on:
 
 jobs:
   deploy:
+    if: ${{ false }} # Disabled; rely on Vercel's native GitHub integration or set secrets to enable
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-
-      - name: Deploy to Vercel (Production)
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: "."
-          prod: true
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      - name: Skip
+        run: echo "Vercel deployment via GitHub Action is disabled. Use Vercel's GitHub integration or provide required secrets."
