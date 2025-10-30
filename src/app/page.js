@@ -175,7 +175,7 @@ export default function Home() {
               </>
             ) : (
               <>
-                <a href="/quiz" className="hover:text-[var(--brand-primary)]">Quiz</a>
+                <Link href="/quiz" className="hover:text-[var(--brand-primary)]">Quiz</Link>
                 <a href="/courses" className="hover:text-[var(--brand-primary)]">Courses</a>
               </>
             )}
@@ -190,7 +190,7 @@ export default function Home() {
             ) : (
               <>
                 <a href="/login" className="inline-flex items-center justify-center rounded-full border border-neutral-300 bg-white text-neutral-900 px-4 py-2 text-sm font-semibold hover:bg-neutral-50">Login</a>
-                <a href="/quiz" className="inline-flex items-center justify-center rounded-full bg-[var(--brand-primary)] text-white px-4 py-2 text-sm font-semibold hover:bg-[var(--brand-primary-dark)]">Start Now</a>
+                <Link href="/quiz" className="inline-flex items-center justify-center rounded-full bg-[var(--brand-primary)] text-white px-4 py-2 text-sm font-semibold hover:bg-[var(--brand-primary-dark)]">Start Now</Link>
               </>
             )}
           </div>
@@ -213,7 +213,7 @@ export default function Home() {
             </p>
             {/* Quotes carousel moved to above How AI Master works */}
             <div className="mt-6 flex flex-wrap gap-3">
-              <a href="/quiz" className="inline-flex items-center justify-center rounded-full bg-[var(--brand-primary)] text-white px-5 py-3 text-sm font-semibold hover:bg-[var(--brand-primary-dark)]">Start Now</a>
+              <Link href="/quiz" className="inline-flex items-center justify-center rounded-full bg-[var(--brand-primary)] text-white px-5 py-3 text-sm font-semibold hover:bg-[var(--brand-primary-dark)]">Start Now</Link>
             </div>
             <div className="mt-6 text-sm text-neutral-600">
               More than <span className="font-semibold">1,210,540+</span> people joined
@@ -261,7 +261,7 @@ export default function Home() {
                   <div className="mt-1 text-lg font-semibold">{Math.round(dashboard.latestQuiz.score.percent)}% • Level: {dashboard.latestQuiz.score.level}</div>
                   <div className="mt-1 text-xs text-neutral-600">Saved {new Date(dashboard.latestQuiz.timestamp).toLocaleString()}</div>
                 </div>
-                <a href="/quiz" className="inline-flex items-center rounded-full bg-[var(--brand-primary)] text-white px-4 py-2 text-sm font-semibold hover:bg-[var(--brand-primary-dark)]">Retake Quiz</a>
+                <Link href="/quiz" className="inline-flex items-center rounded-full bg-[var(--brand-primary)] text-white px-4 py-2 text-sm font-semibold hover:bg-[var(--brand-primary-dark)]">Retake Quiz</Link>
               </div>
               <div className="mt-4 grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 {dashboard.latestQuiz.score.perCategory?.map((c, i) => (
@@ -345,10 +345,10 @@ export default function Home() {
                 Complete your AI course and receive a certificate to highlight your expertise. It’s proof of the valuable skills you’ve gained to tackle challenges, achieve your goals, and move forward in your career or personal projects.
               </p>
               <div className="mt-6">
-                <a href="/quiz" className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--brand-primary)] text-white px-5 py-3 text-sm font-semibold hover:bg-[var(--brand-primary-dark)]">
+                <Link href="/quiz" className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--brand-primary)] text-white px-5 py-3 text-sm font-semibold hover:bg-[var(--brand-primary-dark)]">
                   Get Certificate Today
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-                </a>
+                </Link>
               </div>
             </div>
             <div className="order-first md:order-last">
@@ -562,10 +562,10 @@ export default function Home() {
               <h2 className="text-4xl md:text-5xl font-bold tracking-tight">Increase your income potential with AI Master</h2>
               <p className="mt-3 text-neutral-600 max-w-md">Learn new digital skills and AI tools to improve your work and boost your income</p>
               <div className="mt-6">
-                <a href="/quiz" className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--brand-primary)] text-white px-5 py-3 text-sm font-semibold hover:bg-[var(--brand-primary-dark)]">
+                <Link href="/quiz" className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--brand-primary)] text-white px-5 py-3 text-sm font-semibold hover:bg-[var(--brand-primary-dark)]">
                   Start Now
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-                </a>
+                </Link>
               </div>
             </div>
             <div className="order-last">
@@ -938,12 +938,12 @@ export default function Home() {
 
                 {/* CTA */}
                 <div className="mt-8 flex justify-center">
-                  <a
+                  <Link
                     href="/quiz"
                     className="inline-flex items-center rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-6 py-3 text-white font-semibold shadow-md hover:from-indigo-600 hover:to-violet-600 transition"
                   >
                     Join Our Challenge
-                  </a>
+                  </Link>
                 </div>
               </>
             );
@@ -1115,12 +1115,12 @@ export default function Home() {
              <div className="order-2 flex w-full flex-col items-center px-10 pt-10 pb-8 lg:order-1 lg:block lg:py-[70px] lg:px-0">
                <h2 className="text-center text-[28px] font-medium leading-[32px] tracking-[-1px] lg:text-left lg:text-[48px] lg:leading-[56px]">Start your AI journey with Coursiv today!</h2>
                <p className="mt-2 max-w-[638px] text-center text-[16px] leading-[24px] tracking-[-0.2px] opacity-80 lg:mt-6 lg:text-left lg:text-[20px] lg:leading-[28px]">Learn today, take control of your future, and grow your income with new digital skills and AI</p>
-               <a href="/quiz" className="flex cursor-pointer items-center justify-center rounded-[24px] bg-[#5653FE] px-[69px] py-[12px] text-base font-semibold leading-[24px] text-white mt-10 lg:px-6">
+               <Link href="/quiz" className="flex cursor-pointer items-center justify-center rounded-[24px] bg-[#5653FE] px-[69px] py-[12px] text-base font-semibold leading-[24px] text-white mt-10 lg:px-6">
                  <span className="ml-1 text-base font-medium">Start Now</span>
                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" className="hidden h-6 w-6 lg:block">
                    <path fill="#fff" d="M16.375 12.065c0 .232-.082.43-.267.608l-5.332 5.216a.753.753 0 0 1-.553.225.786.786 0 0 1-.8-.793c0-.219.096-.417.24-.567l4.812-4.69-4.813-4.689a.824.824 0 0 1-.24-.574c0-.445.356-.786.8-.786.22 0 .404.075.554.225l5.332 5.216a.83.83 0 0 1 .267.609Z" />
                  </svg>
-               </a>
+               </Link>
              </div>
              <div className="order-1 mt-4 flex w-full justify-center lg:order-2 lg:mt-0 lg:mr-24 lg:justify-end">
                <img src="https://coursiv.io/_next/static/media/phone.6b1bd676.png" alt="Sample Coursiv learning path in-app screenshot" className="h-auto w-full max-w-[313px]" />
