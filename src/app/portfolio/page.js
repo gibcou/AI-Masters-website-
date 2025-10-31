@@ -83,7 +83,7 @@ export default function PortfolioPage() {
                 <button onClick={() => signOut(auth)} className="inline-flex items-center justify-center rounded-full border border-neutral-300 bg-white text-neutral-900 px-4 py-2 text-sm font-semibold hover:bg-neutral-50">Logout</button>
               </>
             ) : (
-              <a href="/login" className="inline-flex items-center rounded-full border border-neutral-300 bg-white text-neutral-900 px-4 py-2 text-sm hover:text-[var(--brand-primary)]">Login</a>
+              <a href="https://gibcou.github.io/AI-Masters-website-/login/" className="inline-flex items-center rounded-full border border-neutral-300 bg-white text-neutral-900 px-4 py-2 text-sm hover:text-[var(--brand-primary)]">Login</a>
             )}
           </div>
         </div>
@@ -276,7 +276,7 @@ export default function PortfolioPage() {
           <h2 className="text-xl font-semibold">Links</h2>
           <div className="mt-3 flex flex-wrap gap-3">
             <Link href="/courses" className="inline-flex items-center justify-center rounded-full bg-[var(--brand-primary)] text-white px-5 py-3 text-sm font-semibold hover:bg-[var(--brand-primary-dark)]">Explore Courses</Link>
-            <Link href="/login" className="inline-flex items-center justify-center rounded-full border border-neutral-300 bg-white text-neutral-900 px-5 py-3 text-sm font-semibold hover:bg-neutral-50">Update Login</Link>
+            <Link href="https://gibcou.github.io/AI-Masters-website-/login/" className="inline-flex items-center justify-center rounded-full border border-neutral-300 bg-white text-neutral-900 px-5 py-3 text-sm font-semibold hover:bg-neutral-50">Update Login</Link>
           </div>
         </section>
       </main>
