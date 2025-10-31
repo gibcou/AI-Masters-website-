@@ -57,6 +57,16 @@ export default function PortfolioPage() {
             {user ? (
               <>
                 <Link href="/courses" className="hover:text-[var(--brand-primary)]">Courses</Link>
+                {(() => {
+                  try {
+                    const done = localStorage.getItem("aimasters_quiz_completed") === "true";
+                    return done ? null : (
+                      <Link href="/quiz" className="hover:text-[var(--brand-primary)]">Take the quiz</Link>
+                    );
+                  } catch {
+                    return null;
+                  }
+                })()}
                 <Link href="/portfolio" className="hover:text-[var(--brand-primary)]">Profile</Link>
               </>
             ) : (

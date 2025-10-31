@@ -126,7 +126,7 @@ const [profileName, setProfileName] = useState("");
   }, [course]);
 
   useEffect(() => {
-    if (!authChecked || !user || !course || !accessChecked) return;
+    if (!authChecked || !user || !course) return;
     const key = `aimasters_course_${slug}`;
     try {
       const raw = localStorage.getItem(key);
@@ -310,7 +310,7 @@ const [profileName, setProfileName] = useState("");
   // Derived curriculum labs for right panel
   const labs = (course.curriculum || []).flatMap((m) => m.labs || []);
 
-  if (!authChecked || !user || !accessChecked) {
+  if (!authChecked || !user) {
     return (
       <div className="min-h-screen bg-white text-neutral-900 flex items-center justify-center">
         <div className="animate-pulse text-neutral-600">Loading course...</div>
@@ -332,6 +332,16 @@ const [profileName, setProfileName] = useState("");
           {user ? (
             <>
               <Link href="/courses" className="hover:text-[var(--brand-primary)]">Courses</Link>
+              {(() => {
+                try {
+                  const done = localStorage.getItem("aimasters_quiz_completed") === "true";
+                  return done ? null : (
+                    <Link href="/quiz" className="hover:text-[var(--brand-primary)]">Take the quiz</Link>
+                  );
+                } catch {
+                  return null;
+                }
+              })()}
               <Link href="/portfolio" className="hover:text-[var(--brand-primary)]">Profile</Link>
             </>
           ) : (

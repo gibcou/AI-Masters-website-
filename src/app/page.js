@@ -167,19 +167,29 @@ export default function Home() {
             <Link href="/" className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600 text-3xl md:text-4xl font-black italic tracking-tight drop-shadow-sm" style={{ fontFamily: '"Brush Script MT","Lucida Handwriting","Segoe Script","Pacifico",cursive' }}>AI Master</Link>
           </div>
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-            <a href="/" className="hover:text-[var(--brand-primary)]">Home</a>
+            <Link href="/" className="hover:text-[var(--brand-primary)]">Home</Link>
             {user ? (
               <>
-                <a href="/courses" className="hover:text-[var(--brand-primary)]">Courses</a>
-                <a href="/portfolio" className="hover:text-[var(--brand-primary)]">Profile</a>
+                <Link prefetch href="/courses" className="hover:text-[var(--brand-primary)]">Courses</Link>
+                {(() => {
+                  try {
+                    const done = localStorage.getItem("aimasters_quiz_completed") === "true";
+                    return done ? null : (
+                      <Link href="/quiz" className="hover:text-[var(--brand-primary)]">Take the quiz</Link>
+                    );
+                  } catch {
+                    return null;
+                  }
+                })()}
+                <Link href="/portfolio" className="hover:text-[var(--brand-primary)]">Profile</Link>
               </>
             ) : (
               <>
                 <Link href="/quiz" className="hover:text-[var(--brand-primary)]">Quiz</Link>
-                <a href="/courses" className="hover:text-[var(--brand-primary)]">Courses</a>
+                <Link prefetch href="/courses" className="hover:text-[var(--brand-primary)]">Courses</Link>
               </>
             )}
-            {!user && <a href="#blog" className="hover:text-[var(--brand-primary)]">Blog</a>}
+            {!user && <Link href="#blog" className="hover:text-[var(--brand-primary)]">Blog</Link>}
           </nav>
           <div className="flex items-center gap-3">
             {user ? (
