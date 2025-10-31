@@ -86,8 +86,12 @@ export default function CheckoutPage() {
     setStatus(null);
     try {
       await setDoc(doc(db, "users", user.uid), { hasPaid: true }, { merge: true });
+      try {
+        localStorage.setItem("aimasters_access_override", "true");
+        localStorage.setItem("aimasters_last_payment", String(Date.now()));
+      } catch {}
       setStatus({ type: "success", message: "Payment recorded. Redirecting to courses..." });
-      setTimeout(() => router.replace("/courses"), 600);
+      router.replace("/courses");
     } catch (e) {
       setStatus({ type: "error", message: e?.message || "Failed to mark as paid." });
     } finally {
@@ -101,8 +105,12 @@ export default function CheckoutPage() {
     setStatus(null);
     try {
       await setDoc(doc(db, "users", user.uid), { freeAccess: true }, { merge: true });
+      try {
+        localStorage.setItem("aimasters_access_override", "true");
+        localStorage.setItem("aimasters_last_payment", String(Date.now()));
+      } catch {}
       setStatus({ type: "success", message: "Free access granted. Redirecting..." });
-      setTimeout(() => router.replace("/courses"), 600);
+      router.replace("/courses");
     } catch (e) {
       setStatus({ type: "error", message: e?.message || "Failed to grant free access." });
     } finally {

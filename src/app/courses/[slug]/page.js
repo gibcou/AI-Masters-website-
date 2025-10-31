@@ -13,6 +13,7 @@ export default function CoursePlayer() {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [authChecked, setAuthChecked] = useState(false);
+  const [accessChecked, setAccessChecked] = useState(false);
   const course = useMemo(() => getCourseBySlug(slug), [slug]);
   const [current, setCurrent] = useState(0);
   const [notes, setNotes] = useState("");
@@ -50,9 +51,12 @@ const [profileName, setProfileName] = useState("");
     const unsub = onAuthStateChanged(auth, async (fbUser) => {
       if (!fbUser) {
         setUser(null);
+        setAuthChecked(true);
+        setAccessChecked(true);
         router.replace("/login");
       } else {
         setUser(fbUser);
+        setAuthChecked(true);
         try {
           const email = fbUser?.email || fbUser?.uid;
           if (email) {
@@ -62,6 +66,16 @@ const [profileName, setProfileName] = useState("");
         } catch {}
         // Payment gating: redirect unpaid users to checkout (with owner/freeAccess bypass)
         try {
+          // Check local override first
+          try {
+            const override = localStorage.getItem("aimasters_access_override") === "true";
+            if (override) {
+              setAccessGranted(true);
+              setAccessChecked(true);
+              return;
+            }
+          } catch {}
+
           const uref = doc(db, "users", fbUser.uid);
           const snap = await getDoc(uref);
           const data = snap.exists() ? snap.data() : {};
@@ -75,12 +89,14 @@ const [profileName, setProfileName] = useState("");
           }
           const accessGranted = hasPaid || freeAccess || isOwner;
           setAccessGranted(accessGranted);
+          setAccessChecked(true);
           if (!accessGranted) {
             router.replace("/checkout");
           }
-        } catch {}
+        } catch {
+          setAccessChecked(true);
+        }
       }
-      setAuthChecked(true);
     });
     return () => unsub();
   }, [router]);
@@ -88,6 +104,10 @@ const [profileName, setProfileName] = useState("");
   const handleLogout = async () => {
     try {
       await signOut(auth);
+      try {
+        localStorage.removeItem("aimasters_access_override");
+        localStorage.removeItem("aimasters_last_payment");
+      } catch {}
       router.replace("/login");
     } catch (e) {
       // no-op
@@ -106,7 +126,7 @@ const [profileName, setProfileName] = useState("");
   }, [course]);
 
   useEffect(() => {
-    if (!authChecked || !user || !course) return;
+    if (!authChecked || !user || !course || !accessChecked) return;
     const key = `aimasters_course_${slug}`;
     try {
       const raw = localStorage.getItem(key);
@@ -289,6 +309,14 @@ const [profileName, setProfileName] = useState("");
 
   // Derived curriculum labs for right panel
   const labs = (course.curriculum || []).flatMap((m) => m.labs || []);
+
+  if (!authChecked || !user || !accessChecked) {
+    return (
+      <div className="min-h-screen bg-white text-neutral-900 flex items-center justify-center">
+        <div className="animate-pulse text-neutral-600">Loading course...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">

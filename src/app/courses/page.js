@@ -15,6 +15,7 @@ export default function CoursesIndex() {
   const [authChecked, setAuthChecked] = useState(false);
   const [profileName, setProfileName] = useState("");
   const [accessGranted, setAccessGranted] = useState(false);
+  const [accessChecked, setAccessChecked] = useState(false);
 
   // Login-required guard via Firebase + payment gating
   useEffect(() => {
@@ -22,6 +23,7 @@ export default function CoursesIndex() {
       if (!fbUser) {
         setUser(null);
         setAuthChecked(true); // render immediately
+        setAccessChecked(true);
         router.replace("/login");
         return;
       }
@@ -39,6 +41,16 @@ export default function CoursesIndex() {
       // Payment gating check (run asynchronously, do not block first render)
       (async () => {
         try {
+          // Short-circuit if local override present (e.g., after Dev: Mark Paid)
+          try {
+            const override = localStorage.getItem("aimasters_access_override") === "true";
+            if (override) {
+              setAccessGranted(true);
+              setAccessChecked(true);
+              return; // skip redirect while Firestore catches up
+            }
+          } catch {}
+
           const uref = doc(db, "users", fbUser.uid);
           const snap = await getDoc(uref);
           const data = snap.exists() ? snap.data() : {};
@@ -52,10 +64,13 @@ export default function CoursesIndex() {
           }
           const accessGranted = hasPaid || freeAccess || isOwner;
           setAccessGranted(accessGranted);
+          setAccessChecked(true);
           if (!accessGranted) {
             router.replace("/checkout");
           }
-        } catch {}
+        } catch {
+          setAccessChecked(true);
+        }
       })();
     });
     return () => unsub();
@@ -64,6 +79,10 @@ export default function CoursesIndex() {
   const handleLogout = async () => {
     try {
       await signOut(auth);
+      try {
+        localStorage.removeItem("aimasters_access_override");
+        localStorage.removeItem("aimasters_last_payment");
+      } catch {}
       router.replace("/login");
     } catch (e) {
       // no-op
@@ -95,7 +114,7 @@ export default function CoursesIndex() {
     }
   }, [courses, accessGranted]);
 
-  if (!authChecked || !user) {
+  if (!authChecked || !user || !accessChecked) {
     return null;
   }
 
